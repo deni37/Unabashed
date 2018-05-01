@@ -2,7 +2,7 @@
 Basic Bash scripting library
 
 This is a collection of simple libraries designed to speed up scripting in Bash. Everything is broken into groups based on purpose. 
-Source desired libraries into your Bash script for day-to-day Linux administration. Verifiy that the file loaded by testing with:
+Source desired libraries into your Bash script for day-to-day Linux administration. Verify that the file loaded by testing with:
   [[ -n <VERIFY_VARIABLE> ]] || { exit-on-error }
   For example:
       [[ -s "/path/to/print.lib" ]] && . /path/to/print.lib
