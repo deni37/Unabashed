@@ -1,0 +1,43 @@
+#!/bin/bash
+##############
+#+ VERSION::1.1.0
+#- VERIFY::_Strings_
+declare -r _Strings_="TacoTuesday"
+
+
+#################################################
+# <function::intCheck>
+#   verifies data is an integer
+#   returns exit code 0 on valid int
+#   returns exit code 1 on invalid int
+# </function>
+#################################################
+intCheck() {
+    local int="^[0-9]+$"
+    [[ "$1" =~ $int ]] && return 0
+    return 1
+}
+
+
+#################################################
+# <function::toLower>
+#   convert string to lower case
+# </function>
+#################################################
+toLower() {
+  declare -l str="$@"
+  printf "%s" "$str" && return 0
+  return 1
+}
+
+
+#################################################
+# <function::toUpper>
+#   convert string to uppercase
+# </function>
+#################################################
+toUpper() {
+  declare -u str="$@"
+  printf "%s" "$str" && return 0
+  return 1
+}
