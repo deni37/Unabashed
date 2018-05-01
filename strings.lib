@@ -25,9 +25,9 @@ intCheck() {
 # </function>
 #################################################
 toLower() {
-  declare -l str="$@"
-  printf "%s" "$str" && return 0
-  return 1
+    declare -l str="$@"
+    printf "%s" "$str" && return 0
+    return 1
 }
 
 
@@ -37,7 +37,7 @@ toLower() {
 # </function>
 #################################################
 toUpper() {
-  declare -u str="$@"
-  printf "%s" "$str" && return 0
-  return 1
+    declare -u str="$@"
+    printf "%s" "$str" && return 0
+    return 1
 }
