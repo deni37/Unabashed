@@ -1,0 +1,25 @@
+#!/bin/bash
+##############
+#+ VERSION::1.1.0
+#- VERIFIY::_Print_
+declare -r _Print_="TacoTuesday"
+
+
+###############################
+# <function::genPrint>
+#   generic print function
+#   replaces echo "$@"
+#   ARG@ -> string to print
+# </function>
+##############################
+genPrint() { printf "%s\n" "$@"; }
+
+###############################
+# <function::tabPrint>
+#   generic print function with
+#     +tab indent
+#   replaces echo -e "\t$@\n"
+#   ARG@ -> string to print
+# </function>
+##############################
+tabPrint() { printf "\t%s\n" "$@"; }
