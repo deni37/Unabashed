@@ -1,7 +1,7 @@
 #!/bin/bash
 ##############
 #+ VERSION::1.1.0
-#- VERIFIY::_Fonts_
+#- VERIFY::_Fonts_
 declare -r _Fonts_="TacoTuesday"
 
 
@@ -36,4 +36,4 @@ declare -r WhiteBack="tput setab 7"
 declare -r DefaultBack="tput setab 9"
 
 ##reset to defaults
-declare -r ResetDefaultFB="tput sgr0"
+declare -r DefaultAttr="tput sgr0"
