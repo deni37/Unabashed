@@ -7,7 +7,10 @@ Source desired libraries into your Bash script for day-to-day Linux administrati
   [[ -n <VERIFY_VARIABLE> ]] || { exit-on-error }
 
   For example:
+  
       [[ -s "/path/to/print.lib" ]] && . /path/to/print.lib
+      
+      
       [[ -n "$_Print_" ]] || { printf "Unable to load source file\n" >&2; exit 1; }
 
 
