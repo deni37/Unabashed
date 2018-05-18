@@ -1,6 +1,6 @@
 #!/bin/bash
 ##############
-#+ VERSION::1.1.0
+#+ VERSION::1.2.0
 #- VERIFY::_Strings_
 declare -r _Strings_="TacoTuesday"
 
@@ -39,5 +39,103 @@ toLower() {
 toUpper() {
     local -u str="$@"
     printf "%s" "$str" && return 0
+    return 1
+}
+
+
+#################################################
+# <function::toUpperFirst>
+#   convert first letter of string to uppercase
+# </function>
+#################################################
+toUpperFirst() {
+    local -u fst="${1:0:1}"
+    local    rst="${1:1}"
+    shift
+    printf "%s%s %s" "$fst" "$rst" "$@" && return 0
+    return 1
+}
+
+
+#################################################
+# <function::lTrim>
+#   trim left whitespace
+# </function>
+#################################################
+lTrim() {
+    local str="$@"
+    local rgx="^[[:space:]]"
+    while [[ "$str" =~ $rgx ]]
+      do
+        str="${str/#[[:space:]]/}"
+    done
+    printf "%s" "$str" && return 0
+    return 1
+}
+
+
+#################################################
+# <function::rTrim>
+#   trim right whitespace
+# </function>
+#################################################
+rTrim() {
+    local str="$@"
+    local rgx="[[:space:]]$"
+    while [[ "$str" =~ $rgx ]]
+      do
+        str="${str/%[[:space:]]/}"
+    done
+    printf "%s" "$str" && return 0
+    return 1
+}
+
+
+#################################################
+# <function::trim>
+#   trim left & right whitespace
+# </function>
+#################################################
+trim() {
+    local str="$@"
+    str=$(lTrim "$str")
+    str=$(rTrim "$str")
+    printf "%s" "$str" && return 0
+    return 1
+}
+
+
+#################################################
+# <function::isInString>
+#   check for character in string
+#   NOT case sensitive
+#   returns exit code 0 on found
+#   returns exit code 1 on not found
+# </function>
+#################################################
+isInString() {
+    local -l str="$1"
+    local -l x="$2"
+    case "$str" in
+        *"$x"*) return 0;;
+    esac
+    return 1
+}
+
+
+#################################################
+# <function::isInStringCase>
+#   check for character in string
+#   CASE sensitive
+#   returns exit code 0 on found
+#   returns exit code 1 on not found
+# </function>
+#################################################
+isInStringCase() {
+    local str="$1"
+    local x="$2"
+    case "$str" in
+        *"$x"*) return 0;;
+    esac
     return 1
 }
