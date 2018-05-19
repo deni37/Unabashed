@@ -1,6 +1,6 @@
 #!/bin/bash
 ##############
-#+ VERSION::1.2.0
+#+ VERSION::1.3.0
 #- VERIFY::_Strings_
 declare -r _Strings_="TacoTuesday"
 
@@ -109,6 +109,8 @@ trim() {
 # <function::isInString>
 #   check for character in string
 #   NOT case sensitive
+#   ARG1 = character to find
+#   ARG2 = string to search
 #   returns exit code 0 on found
 #   returns exit code 1 on not found
 # </function>
@@ -127,6 +129,8 @@ isInString() {
 # <function::isInStringCase>
 #   check for character in string
 #   CASE sensitive
+#   ARG1 = character to find
+#   ARG2 = string to search
 #   returns exit code 0 on found
 #   returns exit code 1 on not found
 # </function>
@@ -137,5 +141,32 @@ isInStringCase() {
     case "$str" in
         *"$x"*) return 0;;
     esac
+    return 1
+}
+
+
+#################################################
+# <function:whereInString>
+#   check for character position in string
+#   NOT case sensitive
+#   ARG1 = character to find
+#   ARG2 = string to search
+#   prints position number of first match
+#   returns exit code 0 on found
+#   returns exit code 1 on not found
+# </function>
+#################################################
+whereInString() {
+    local -l x="$1"
+    shift
+    local -l str="$@"
+    local    i
+    for (( i=0; i<"${#str}"; i++ ))
+      do
+        if [[ "$x" == "${str:${i}:1}" ]]
+          then
+            printf "%s" "$i" && return 0
+        fi
+    done
     return 1
 }
