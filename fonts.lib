@@ -1,39 +1,64 @@
 #!/bin/bash
 ##############
-#+ VERSION::1.1.0
+#+ VERSION::2.1.0
 #- VERIFY::_Fonts_
 declare -r _Fonts_="TacoTuesday"
 
 
 #################################################
 # <constants::fonts>
-#   basic tput fonts
-#   USAGE -> 
-#     var="$($RedFont)<STRING>$($DefaultFont)"
-#     printf "%s\n" "$var"
+#   font escape character constants
+#   USAGE ->
+#     var="${RedFont}<STRING>${DefaultFont}"
+#     printf "${var}\n"
+#        or
+#     echo -en "${var}\n"
 # </constants>
 #################################################
+##format
+declare -r BoldText="\e[1m"
+declare -r UnderText="\e[4m"
+declare -r DimText="\e[2m"
+declare -r StrikeText="\e[9m"
+declare -r BlinkText="\e[5m"
+declare -r ReverseText="\e[7m"
+declare -r HiddenText="\e[8m"
+declare -r NormalText="\e[0m"
+
 ##foreground
-declare -r BlackFont="tput setaf 0"
-declare -r RedFont="tput setaf 1"
-declare -r GreenFont="tput setaf 2"
-declare -r YellowFont="tput setaf 3"
-declare -r BlueFont="tput setaf 4"
-declare -r MagentaFont="tput setaf 5"
-declare -r CyanFont="tput setaf 6"
-declare -r WhiteFont="tput setaf 7"
-declare -r DefaultFont="tput setaf 9"
+declare -r BlackFont="\e[30m"
+declare -r RedFont="\e[31m"
+declare -r GreenFont="\e[32m"
+declare -r OrangeFont="\e[33m"
+declare -r BlueFont="\e[34m"
+declare -r PurpleFont="\e[35m"
+declare -r AquaFont="\e[36m"
+declare -r GrayFont="\e[37m"
+declare -r DarkGrayFont="\e[90m"
+declare -r LightRedFont="\e[91m"
+declare -r LightGreenFont="\e[92m"
+declare -r YellowFont="\e[93m"
+declare -r LightBlueFont="\e[94m"
+declare -r LightPurpleFont="\e[95m"
+declare -r LightAquaFont="\e[96m"
+declare -r WhiteFont="\e[97m"
+declare -r DefaultFont="\e[39m"
 
 ##background
-declare -r BlackBack="tput setab 0"
-declare -r RedBack="tput setab 1"
-declare -r GreenBack="tput setab 2"
-declare -r YellowBack="tput setab 3"
-declare -r BlueBack="tput setab 4"
-declare -r MagentaBack="tput setab 5"
-declare -r CyanBack="tput setab 6"
-declare -r WhiteBack="tput setab 7"
-declare -r DefaultBack="tput setab 9"
-
-##reset to defaults
-declare -r DefaultAttr="tput sgr0"
+declare -r BlackBack="\e[40m"
+declare -r RedBack="\e[41m"
+declare -r GreenBack="\e[42m"
+declare -r OrangeBack="\e[43m"
+declare -r BlueBack="\e[44m"
+declare -r PurpleBack="\e[45m"
+declare -r AquaBack="\e[46m"
+declare -r GrayBack="\e[47m"
+declare -r DarkGrayBack="\e[100m"
+declare -r LightRedBack="\e[101m"
+declare -r LightGreenBack="\e[102m"
+declare -r YellowBack="\e[103m"
+declare -r LightBlueBack="\e[104m"
+declare -r LightPurpleBack="\e[105m"
+declare -r LightAquaBack="\e[106m"
+declare -r WhiteBack="\e[107m"
+declare -r DefaultBack="\e[49m"
