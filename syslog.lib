@@ -24,6 +24,7 @@ declare -r  _Syslog_="TacoTuesday"
 
 declare    tm_stamp
 declare -i msg_pri
+declare    err_msg
 
 ###################################
 # <constant::[CONSTANTS]>
@@ -137,7 +138,7 @@ makeStamp23() { tm_stamp=$(date +%F"T"%T.%6N%:z); }
 #   call this function to generate
 #+    the final output to syslog
 #   TO CALL THIS FUNCTION PASS
-#+    ARG1 is optional
+#+    ARG1 is requried
 #+    ARG2 is optional
 #+    ARG1 in '[facility.severity]'
 #+    ARG2 in '{sevicename.systag}'
@@ -159,7 +160,8 @@ writeSyslog23() {
         calcPriority23 "${1:1:(-1)}"
         shift
       else
-#        printf "stamp & message" >&2
+        err_msg="[ $(date +%s) ] :: Priority arguments required!"
+        printf "%s\n" "$err_msg" >&2
         return 1
     fi
 
@@ -172,7 +174,6 @@ writeSyslog23() {
         [[ "$msg_tag" = "$msg_svc" ]] && msg_tag="-"
         shift
       else
-       #?INSERT ERROR MESSAGE HERE?#
         msg_svc="syslog_lib"
         msg_tag="-"
     fi
@@ -197,7 +198,7 @@ writeSyslog23() {
 # </function>
 ###################################
 
-#= writeSyslog <info> {service.syslogtag} message
+#= writeSyslog [info] {service.syslogtag} message
 writeSyslog() {
     local msg_lvl
     local msg_svc
@@ -218,7 +219,6 @@ writeSyslog() {
         msg_svc="${msg_svc%%.*}"
         shift
       else
-        #?INSERT ERROR MESSAGE HERE?#
         msg_svc="syslog_lib"
         msg_tag="$$"
     fi
