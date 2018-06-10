@@ -1,0 +1,229 @@
+#!/bin/bash
+##############
+#+ VERSION::1.1.0
+#- VERIFY::_Syslog_
+declare -r  _Syslog_="TacoTuesday"
+
+
+#-----------------------------------------------------------------------------------------------------#
+#=                           --RSYSLOG_TraditionalForwardFormat--                                    =#
+#=               MMM dd hh:mm:ss HostName ServiceName[Pid]: <level> Message starts here              =#
+#-----------------------------------------------------------------------------------------------------#
+#=                           --RSYSLOG_SyslogProtocol23Format--                                      =#
+#=  <priority>1 YYYY-MM-ddThh:mm:ss.nsnsns-:z HostName ServiceName SyslogTag - - Message starts here =#
+#=                           Functions specific to this format end in '23'                           =#
+#=                           SyslogTag is commonly Pid                                               =#
+#-----------------------------------------------------------------------------------------------------#
+
+
+###################################
+# <variable::[VARIABLES]>
+#   syslog message variables
+# </variable>
+###################################
+
+declare    tm_stamp
+declare -i msg_pri
+
+###################################
+# <constant::[CONSTANTS]>
+#   syslog message constants
+# </variable>
+###################################
+
+  ## HOSTFILE ##
+declare -r HostFile="/etc/hostname"
+  ## HOSTFILE ##
+
+  ###################################
+  # <constant::HostName>
+  #   determine the system hostname
+  #   if system environment does not
+  #+    supply value for 'HOSTNAME'
+  #+    the 'HostFile' listed above
+  #+    will be read for the value
+  #+    change the 'HostFile' value
+  #+    for your environment if the
+  #+    default is not suitable
+  #   if no value is found from the
+  #+    system then 'localhost' will
+  #+    be assigned in place
+  # </constant>
+  ###################################
+
+  declare __hst__="$HOSTNAME"
+  if [[ -z "$__hst__" ]]
+    then
+      [[ -s "$HostFile" ]] && __hst__=$(sed -n '1p' "$HostFile")
+      [[ "$?" -ne 0 || -z "$__hst__" ]] && __hst__="localhost"
+  fi
+
+declare -r HostName="$__hst__"
+unset __hst__
+declare -r pri_rgx="^\[.+\]$"
+declare -r svc_rgx="^\{.+\}$"
+
+###################################
+# <array::[ARRAYS]>
+#   syslog formatting arrays
+# </array>
+###################################
+
+declare -ar SyslogFacility=( "kern" "user" "mail" "daemon" "auth" "lpr" "syslog" "news" "uucp" "clock" "security" "ftp" "ntp" "logaudit" "logalert" "clock" "local0" "local1" "local2" "local3" "local4" "local5" "local6" "local7" )
+declare -ar SyslogSeverity=( "emerg" "alert" "crit" "err" "warn" "notice" "info" "debug" )
+
+
+###################################
+# <function::calcPriority23>
+#   calculate priority for syslog23
+#   the formula for priority is
+#+    '(facility*8)+severity'
+#   the index location in each
+#+    respective array is the
+#+    numerical value for the label
+#+    i.e. SyslogFacility[0]="kern"
+#++     the numerical value for
+#++     'kern' is '0'
+#   TO CALL THIS FUNCTION PASS
+#+    ARG1 in 'facility'.'severity'
+#+    format i.e. 'auth.info'
+#   GLOBAL VARIABLE 'msg_pri'
+#+    used by writeSyslog23
+# </function>
+###################################
+
+calcPriority23() {
+    local -l fac="${1%%.*}"
+    local -l sev="${1##*.}"
+    local -i _f_
+    local -i _s_
+    local -i i
+
+    for ((i=0; i<24; i++))
+      do
+        [[ "${SyslogFacility[${i}]}" == "$fac" ]] && _f_="$i"
+        [[ "${SyslogSeverity[${i}]}" == "$sev" ]] && _s_="$i"
+        [[ -n "$_f_" ]] && [[ -n "$_s_" ]] && break
+    done
+    msg_pri=$(( (( _f_*8 ))+_s_ ))
+}
+
+
+###################################
+# <function::makeStamp>
+#   generate timestamp for syslog
+#   GLOBAL VARIABLE 'tm_stamp'
+#+    used by writeSyslog
+# </function>
+###################################
+
+makeStamp() { tm_stamp=$(date +%b" "%e" "%T); }
+
+
+###################################
+# <function::makeStamp23>
+#   generate timestamp for syslog23
+#   GLOBAL VARIABLE 'tm_stamp'
+#+    used by writeSyslog23
+# </function>
+###################################
+
+makeStamp23() { tm_stamp=$(date +%F"T"%T.%6N%:z); }
+
+
+###################################
+# <function::writeSyslog23>
+#   write out syslog message23
+#   call this function to generate
+#+    the final output to syslog
+#   TO CALL THIS FUNCTION PASS
+#+    ARG1 is optional
+#+    ARG2 is optional
+#+    ARG1 in '[facility.severity]'
+#+    ARG2 in '{sevicename.systag}'
+#+    ARG1 MUST BE INSIDE '[]'
+#+    ARG2 MUST BE INSIDE '{}'
+# </function>
+###################################
+
+#= writeSyslog23 [auth.info] {service.syslogtag} message
+writeSyslog23() {
+    local msg_svc
+    local msg_tag
+    local sys_msg
+    makeStamp23
+
+    # priority is required
+    if [[ "$1" =~ $pri_rgx ]]
+      then
+        calcPriority23 "${1:1:(-1)}"
+        shift
+      else
+#        printf "stamp & message" >&2
+        return 1
+    fi
+
+    # service/tag are optional
+    if [[ "$1" =~ $svc_rgx ]]
+      then
+        msg_svc="${1:1:(-1)}"
+        msg_tag="${msg_svc##*.}"
+        msg_svc="${msg_svc%%.*}"
+        [[ "$msg_tag" = "$msg_svc" ]] && msg_tag="-"
+        shift
+      else
+       #?INSERT ERROR MESSAGE HERE?#
+        msg_svc="syslog_lib"
+        msg_tag="-"
+    fi
+
+    sys_msg="<${msg_pri}>1 $tm_stamp $HostName $msg_svc $msg_tag - - $@"
+    printf "%s\n" "$sys_msg"
+}
+
+
+###################################
+# <function::writeSyslog>
+#   write out syslog message23
+#   call this function to generate
+#+    the final output to syslog
+#   TO CALL THIS FUNCTION PASS
+#+    ARG1 is optional
+#+    ARG2 is optional
+#+    ARG1 in '[severity]'
+#+    ARG2 in '{sevicename.systag}'
+#+    ARG1 MUST BE INSIDE '[]'
+#+    ARG2 MUST BE INSIDE '{}'
+# </function>
+###################################
+
+#= writeSyslog <info> {service.syslogtag} message
+writeSyslog() {
+    local msg_lvl
+    local msg_svc
+    local msg_tag
+
+    # this is not required
+    if [[ "$1" =~ $pri_rgx ]]
+      then
+        msg_lvl="<${1:1:(-1)}>"
+        shift
+    fi
+
+    # this needs to be in message but can be omitted
+    if [[ "$1" =~ $svc_rgx ]]
+      then
+        msg_svc="${1:1:(-1)}"
+        msg_tag="${msg_svc##*.}"
+        msg_svc="${msg_svc%%.*}"
+        shift
+      else
+        #?INSERT ERROR MESSAGE HERE?#
+        msg_svc="syslog_lib"
+        msg_tag="$$"
+    fi
+
+    makeStamp
+    sys_msg="$tm_stamp $HostName ${msg_svc}[${msg_tag}]: $msg_lvl $@"
+    printf "%s\n" "$sys_msg"
+}
