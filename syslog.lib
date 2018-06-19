@@ -1,6 +1,6 @@
 #!/bin/bash
 ##############
-#+ VERSION::1.3.0
+#+ VERSION::1.4.0
 #- VERIFY::_Syslog_
 declare -r  _Syslog_="TacoTuesday"
 
@@ -185,7 +185,7 @@ writeSyslog23() {
 
 ###################################
 # <function::writeSyslog>
-#   write out syslog message23
+#   write out syslog message
 #   call this function to generate
 #+    the final output to syslog
 #   TO CALL THIS FUNCTION PASS
@@ -198,7 +198,7 @@ writeSyslog23() {
 # </function>
 ###################################
 
-#= writeSyslog [info] {service.syslogtag} message
+#= writeSyslog [severity] {syslogtag.pid} message
 writeSyslog() {
     local msg_lvl
     local msg_tag
