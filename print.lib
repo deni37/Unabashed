@@ -1,6 +1,6 @@
 #!/bin/bash
 ##############
-#+ VERSION::1.1.0
+#+ VERSION::1.2.0
 #- VERIFY::_Print_
 declare -r _Print_="TacoTuesday"
 
@@ -23,3 +23,27 @@ genPrint() { printf "%s\n" "$@"; }
 # </function>
 ##############################
 tabPrint() { printf "\t%s\n" "$@"; }
+
+###############################
+# <function::genPrintF>
+#   generic print function with
+#     +accepts escape 
+#     +characters but does not
+#     +guarantee string format
+#   ARG@ -> string to print
+# </function>
+##############################
+genPrintF() { printf "$@"; }
+
+###############################
+# <function::genPrintInt>
+#   generic print function
+#   +for integers onlys
+#   ARG1 -> integers to print
+# </function>
+##############################
+genPrintInt() {
+    local intrgx="^[0-9]+$"
+    [[ "$1" =~ $intrgx ]] && { printf "%d\n" "$1" && return 0; }
+    return 1
+}
