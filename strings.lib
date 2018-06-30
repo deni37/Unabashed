@@ -6,20 +6,6 @@ declare -r _Strings_="TacoTuesday"
 
 
 #################################################
-# <function::intCheck>
-#   verifies data is an integer
-#   returns exit code 0 on valid int
-#   returns exit code 1 on invalid int
-# </function>
-#################################################
-intCheck() {
-    local int="^[0-9]+$"
-    [[ "$1" =~ $int ]] && return 0
-    return 1
-}
-
-
-#################################################
 # <function::toLower>
 #   convert string to lower case
 # </function>
@@ -38,8 +24,7 @@ toLower() {
 #################################################
 toUpper() {
     local -u str="$@"
-    printf "%s" "$str" && return 0
-    return 1
+    printf "%s" "$str"
 }
 
 
@@ -49,11 +34,8 @@ toUpper() {
 # </function>
 #################################################
 toUpperFirst() {
-    local -u fst="${1:0:1}"
-    local    rst="${1:1}"
-    shift
-    printf "%s%s %s" "$fst" "$rst" "$@" && return 0
-    return 1
+    local str="${@^}"
+    printf "%s" "$str"
 }
 
 
@@ -160,12 +142,12 @@ whereInString() {
     local -l x="$1"
     shift
     local -l str="$@"
-    local    i
+    local -i i
     for (( i=0; i<"${#str}"; i++ ))
       do
         if [[ "$x" == "${str:${i}:1}" ]]
           then
-            printf "%s" "$i" && return 0
+            printf "%d" "$i" && return 0
         fi
     done
     return 1
