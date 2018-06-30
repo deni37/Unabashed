@@ -1,7 +1,8 @@
 #!bin/bash
 ##############
-#+ VERSION::1.1.0
-#- VERIFY:: none
+#+ VERSION::1.2.0
+#- VERIFY::_Aliases_
+declare -r _Aliases_="TacoTuesday"
 
 #################################################
 # <alias::ls>
@@ -12,3 +13,13 @@ alias cls='clear && ls'
 alias cll='clear && ls -l'
 alias cla='clear && ls -la'
 alias clh='clear && ls -lh'
+
+
+#################################################
+# <alias::apt>
+#   apt aliases
+# </alias>
+#################################################
+alias apt-update='sudo apt-get update'
+alias apt-upgrade='sudo apt-get update && sudo apt-get dist-upgrade'
+alias apt-full='sudo apt-get update && sudo apt-get dist-upgrade && sudo apt-get autoremove && sudo apt-get clean'
