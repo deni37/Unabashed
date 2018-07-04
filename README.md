@@ -26,9 +26,9 @@ To use this as a framework follow these steps:
   1)  Place the Unabashed library in the "/home" directory resulting in "/home/Unabashed"
   2)  Place the following line at the end of either /home/\<USER\>/.bashrc, /home/\<USER\>/.profile, or /etc/profile:
   
-     \#\#!!!!!!!!!!!!!!!!!!!!!!!!##
-     \#\# LOAD Unabashed LIBRARY ##      
-     \#\#!!!!!!!!!!!!!!!!!!!!!!!!##      
+     ##!!!!!!!!!!!!!!!!!!!!!!!!##
+     ## LOAD Unabashed LIBRARY ##      
+     ##!!!!!!!!!!!!!!!!!!!!!!!!##      
      if [ -e /home/Unabashed/.pref ]      
         then
           . /home/Unabashed/.pref          
