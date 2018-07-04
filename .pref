@@ -1,0 +1,137 @@
+#!/bin/bash
+##############
+#+ VERSION::1.1.0
+#- VERIFY::[none]
+
+
+#################################################
+# <core::[ROOT LOADING FILE]>
+#   This is the root file to used to load the
+#   +  Unabashed library. This must be called
+#   +  by ".bashrc", ".profile", or "profile"
+#   +  to load the Unabashed library into your
+#   +  shell environment. The library can also
+#   +  be used by sourcing this file into Bash
+#   +  scripts. See the README.md file for more
+#   +  details.
+# </core>
+#################################################
+
+
+#################################################
+# <constant::UnabashedVersion>
+#   Unabashed version constant
+#   "UnabashedVersion" is formatted as:
+#   +  "Major_Vers.Minor_Vers.Format_Vers"
+#   + Where:
+#   ++  Major_Vers = Significant library changes
+#   +++  such as new directory additions
+#   ++  Minor_Vers = Significant files changes
+#   +++  such as new file additions
+#   ++ Format_Vers = Significant changes to the
+#   +++  way the library files are formatted
+# </constant>
+#################################################
+declare -r UnabashedVersion="1.1.1"
+declare -r UnabashedTitle="\e[37mUna\e[31m\e[4mBash\e[0m\e[37med\e[39m\n"
+
+
+#################################################
+# <constant::BashMinVersion>
+#   Unabashed Bash minimum version constant
+#   version is checked prior to loading the
+#   +  Unabashed library
+# </constant>
+#################################################
+declare -r BashMinVersion="4"
+    # check the Bash version before trying to load Unabashed
+    if (( "${BASH_VERSION:0:1}" != "$BashMinVersion" ))
+      then
+        printf "\n\tUNSUPPORTED BASH VERSION::${BASH_VERSION}!\n" >&2
+        printf "\tThe $UnabashedTitle library requires a minimum of Bash version 4!\n" >&2
+        exit 1
+    fi
+
+
+#################################################
+# <constant::[DIRECTORY TREE]>
+#   Unabashed directory tree constants
+#   format for constants is:
+#   + "Un"<Directory_name>"Dir"
+# </constant>
+#################################################
+declare -r UnabashedDir="/home/Unabashed"
+declare -r UnLibDir="${UnabashedDir}/lib"
+
+
+#################################################
+# <variable::[GENERAL VARIABLES]>
+#   Unabashed variables
+# </variable>
+#################################################
+HAS_ERR=false
+WHICH_ERR=""
+UN_LIB=""
+
+
+#################################################
+# <variable::PS1>
+#   options for PS1 setup
+#   uncomment the desired format or leave all
+#   +  commented out for default system PS1
+#   +  example time is Jan 1 2018 11:45:55 pm
+#   +  example user is Steve
+#   +  example hostname is BashServer
+# </variable>
+#################################################
+  ## FUTURE:: BUILD THIS THROUGH VARIABLES ##
+# BashServer[23:45]/home/Unabashed
+# $
+PS1='${debian_chroot:+($debian_chroot)}\h[\A]\w\n$ '
+
+# BashServer[23:45:55]/home/Unabashed
+# $
+#PS1='${debian_chroot:+($debian_chroot)}\h[\t]\w\n$ '
+
+# BashServer[Sat Jan 1]/home/Unabashed
+# $
+#PS1='${debian_chroot:+($debian_chroot)}\h[\d]\w\n$ '
+
+# BashServer[11:45:55]/home/Unabashed
+# $
+#PS1='${debian_chroot:+($debian_chroot)}\h[\T]\w\n$ '
+
+# BashServer[11:45 PM]/home/Unabashed
+# $
+#PS1='${debian_chroot:+($debian_chroot)}\h[\@]\w\n$ '
+
+# Unabashed[23:45]/home/Unabashed
+# $
+#PS1='${debian_chroot:+($debian_chroot)}\033[00;37mUna\033[00;31mBash\033[00;37med\033[00;00m[\A]\w\n$ '
+
+
+    ##########################
+    ##!! LOAD THE LIBRARY ->##
+    if [[ -d "$UnabashedDir" ]]
+      then
+        for UN_LIB in "$UnLibDir/"*.lib
+          do
+            . "$UN_LIB"
+        done
+      else
+        printf "\n\tThe Unabashed root directory [${UnabashedDir}] could not be found!\n\tUnabashed has not been loaded!\n" >&2
+    fi
+    ##!! LOAD THE LIBRARY -|##
+    ##########################
+
+    # verify that all of the files loaded
+    case " " in
+       "$_Aliases_ ")   HAS_ERR=true; WHICH_ERR="aliases.lib";;
+       "$_Fonts_ ")     HAS_ERR=true; WHICH_ERR="fonts.lib";;
+       "$_Print_ ")     HAS_ERR=true; WHICH_ERR="print.lib";;
+       "$_Strings_ ")   HAS_ERR=true; WHICH_ERR="strings.lib";;
+       "$_Syslog_ ")    HAS_ERR=true; WHICH_ERR="syslog.lib";;
+       "$_Validate_ ")  HAS_ERR=true; WHICH_ERR="validate.lib";;
+    esac
+
+    "$HAS_ERR" && printf "\n\tUnabashed library file [${WHICH_ERR}] failed to load\n\n" >&2
