@@ -1,12 +1,13 @@
 #!bin/bash
 ##############
-#+ VERSION::1.2.0
+#+ VERSION::1.3.0
 #- VERIFY::_Aliases_
 declare -r _Aliases_="TacoTuesday"
 
 #################################################
 # <alias::ls>
 #   ls aliases
+#   "cl?" aliases clear the screen first
 # </alias>
 #################################################
 alias cls='clear && ls'
