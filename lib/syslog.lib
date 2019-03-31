@@ -55,7 +55,7 @@ declare -r HostFile="/etc/hostname"
   declare __hst__="$HOSTNAME"
   if [[ -z "$__hst__" ]]
     then
-      [[ -s "$HostFile" ]] && __hst__=$(sed -n '1p' "$HostFile")
+      [[ -s "$HostFile" ]] && read __hst__ < "$HostFile"
       [[ "$?" -ne 0 || -z "$__hst__" ]] && __hst__="localhost"
   fi
 
@@ -118,7 +118,7 @@ calcPriority23() {
 # </function>
 ###################################
 
-makeStamp() { tm_stamp=$(date +%b" "%e" "%T); }
+makeStamp() { printf -v tm_stamp '%(%b %e %T)T; }
 
 
 ###################################
@@ -128,7 +128,7 @@ makeStamp() { tm_stamp=$(date +%b" "%e" "%T); }
 #+    used by writeSyslog23
 # </function>
 ###################################
-
+# this needs to be changed to printf -v
 makeStamp23() { tm_stamp=$(date +%F"T"%T.%6N%:z); }
 
 
