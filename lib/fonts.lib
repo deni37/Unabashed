@@ -1,8 +1,20 @@
 #!/bin/bash
 ##############
-#+ VERSION::2.1.0
+#+ VERSION::2.101.0
 #- VERIFY::_Fonts_
 declare -r _Fonts_="TacoTuesday"
+
+
+
+
+#################################################
+# <definition::fonts.lib>
+#   This library defines constants for printing
+#+    color to the terminal
+# </definition>
+#################################################
+
+
 
 
 #################################################
@@ -15,50 +27,70 @@ declare -r _Fonts_="TacoTuesday"
 #     echo -en "${var}\n"
 # </constants>
 #################################################
-##format
-declare -r BoldText="\e[1m"
-declare -r UnderText="\e[4m"
-declare -r DimText="\e[2m"
-declare -r StrikeText="\e[9m"
-declare -r BlinkText="\e[5m"
-declare -r ReverseText="\e[7m"
-declare -r HiddenText="\e[8m"
-declare -r NormalText="\e[0m"
+case "${FontsLoaded:-NO}" in
+  "YES") ;;
+  "NO" )
+    ## format
+    declare -r BoldText="\e[1m"
+    declare -r UnderText="\e[4m"
+    declare -r DimText="\e[2m"
+    declare -r StrikeText="\e[9m"
+    declare -r BlinkText="\e[5m"
+    declare -r ReverseText="\e[7m"
+    declare -r HiddenText="\e[8m"
+    declare -r NormalText="\e[0m"
 
-##foreground
-declare -r BlackFont="\e[30m"
-declare -r RedFont="\e[31m"
-declare -r GreenFont="\e[32m"
-declare -r OrangeFont="\e[33m"
-declare -r BlueFont="\e[34m"
-declare -r PurpleFont="\e[35m"
-declare -r AquaFont="\e[36m"
-declare -r GrayFont="\e[37m"
-declare -r DarkGrayFont="\e[90m"
-declare -r LightRedFont="\e[91m"
-declare -r LightGreenFont="\e[92m"
-declare -r YellowFont="\e[93m"
-declare -r LightBlueFont="\e[94m"
-declare -r LightPurpleFont="\e[95m"
-declare -r LightAquaFont="\e[96m"
-declare -r WhiteFont="\e[97m"
-declare -r DefaultFont="\e[39m"
+    ##foreground
+    declare -r BlackFont="\e[30m"
+    declare -r RedFont="\e[31m"
+    declare -r GreenFont="\e[32m"
+    declare -r OrangeFont="\e[33m"
+    declare -r BlueFont="\e[34m"
+    declare -r PurpleFont="\e[35m"
+    declare -r AquaFont="\e[36m"
+    declare -r GrayFont="\e[37m"
+    declare -r DarkGrayFont="\e[90m"
+    declare -r LightRedFont="\e[91m"
+    declare -r LightGreenFont="\e[92m"
+    declare -r YellowFont="\e[93m"
+    declare -r LightBlueFont="\e[94m"
+    declare -r LightPurpleFont="\e[95m"
+    declare -r LightAquaFont="\e[96m"
+    declare -r WhiteFont="\e[97m"
+    declare -r DefaultFont="\e[39m"
+    
+    ##background
+    declare -r BlackBack="\e[40m"
+    declare -r RedBack="\e[41m"
+    declare -r GreenBack="\e[42m"
+    declare -r OrangeBack="\e[43m"
+    declare -r BlueBack="\e[44m"
+    declare -r PurpleBack="\e[45m"
+    declare -r AquaBack="\e[46m"
+    declare -r GrayBack="\e[47m"
+    declare -r DarkGrayBack="\e[100m"
+    declare -r LightRedBack="\e[101m"
+    declare -r LightGreenBack="\e[102m"
+    declare -r YellowBack="\e[103m"
+    declare -r LightBlueBack="\e[104m"
+    declare -r LightPurpleBack="\e[105m"
+    declare -r LightAquaBack="\e[106m"
+    declare -r WhiteBack="\e[107m"
+    declare -r DefaultBack="\e[49m"
+  ;;
+esac
 
-##background
-declare -r BlackBack="\e[40m"
-declare -r RedBack="\e[41m"
-declare -r GreenBack="\e[42m"
-declare -r OrangeBack="\e[43m"
-declare -r BlueBack="\e[44m"
-declare -r PurpleBack="\e[45m"
-declare -r AquaBack="\e[46m"
-declare -r GrayBack="\e[47m"
-declare -r DarkGrayBack="\e[100m"
-declare -r LightRedBack="\e[101m"
-declare -r LightGreenBack="\e[102m"
-declare -r YellowBack="\e[103m"
-declare -r LightBlueBack="\e[104m"
-declare -r LightPurpleBack="\e[105m"
-declare -r LightAquaBack="\e[106m"
-declare -r WhiteBack="\e[107m"
-declare -r DefaultBack="\e[49m"
+
+
+
+# FUTURE #
+# add predefined functions for printing in a set color
+# i.e. cprintYellow() { printf '%b%s%b\n' "$YellowFont" "$@" "$DefaultFont"; }
+# OR #
+# i.e. printC() { local clr="$1"; shift; local msg="$@"; printf '%b%s%b\n' "$clr" "$msg" "$DefaultFont"; }
+
+
+
+
+# avoid attempting to load existing constants
+declare -r FontsLoaded="YES"
