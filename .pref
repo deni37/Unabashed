@@ -5,47 +5,51 @@
 
 
 #################################################
-# <core::[ROOT LOADING FILE]>
+# <definition::.pref>
 #   This is the root file to used to load the
-#   +  Unabashed library. This must be called
-#   +  by ".bashrc", ".profile", or "profile"
-#   +  to load the Unabashed library into your
-#   +  shell environment. The library can also
-#   +  be used by sourcing this file into Bash
-#   +  scripts. See the README.md file for more
-#   +  details.
-# </core>
-#################################################
+#+    Unabashed library. This must be called
+#+    by ".bashrc", ".profile", or "profile"
+#+    to load the Unabashed library into your
+#+    shell environment. The library can also
+#+    be used by sourcing this file into Bash
+#+    scripts. See the README.md file for more
+#+    details.
+# </definition>
+################################################
+
+
 
 
 #################################################
-# <constant::UnabashedVersion>
+# <constants::Unabashed Structure>
 #   Unabashed version constant
 #   "UnabashedVersion" is formatted as:
-#   +  "Major_Vers.Minor_Vers.Format_Vers"
-#   + Where:
-#   ++  Major_Vers = Significant library changes
-#   +++  such as new directory additions
-#   ++  Minor_Vers = Significant files changes
-#   +++  such as new file additions
-#   ++ Format_Vers = Significant changes to the
-#   +++  way the library files are formatted
-# </constant>
+#+    "Major_Vers.Minor_Vers.Format_Vers"
+#+    Where:
+#++     Major_Vers = Significant library changes
+#+++      such as new directory additions
+#++     Minor_Vers = Significant files changes
+#+++      such as new file additions
+#++     Format_Vers = Significant changes to the
+#+++      way the library files are formatted
+# </constants>
 #################################################
-declare -r UnabashedVersion="1.1.1"
+declare -r UnabashedVersion="1.101.1"
 declare -r UnabashedTitle="\e[37mUna\e[31m\e[4mBash\e[0m\e[37med\e[39m\n"
+
+
 
 
 #################################################
 # <constant::BashMinVersion>
 #   Unabashed Bash minimum version constant
 #   version is checked prior to loading the
-#   +  Unabashed library
+#+    Unabashed library
 # </constant>
 #################################################
 declare -r BashMinVersion="4"
     # check the Bash version before trying to load Unabashed
-    if (( "${BASH_VERSION:0:1}" != "$BashMinVersion" ))
+    if (( "${BASH_VERSINFO[0]}" != "$BashMinVersion" ))
       then
         printf "\n\tUNSUPPORTED BASH VERSION::${BASH_VERSION}!\n" >&2
         printf "\tThe $UnabashedTitle library requires a minimum of Bash version 4!\n" >&2
@@ -53,25 +57,29 @@ declare -r BashMinVersion="4"
     fi
 
 
+
+
 #################################################
-# <constant::[DIRECTORY TREE]>
+# <constants::Directory Tree>
 #   Unabashed directory tree constants
 #   format for constants is:
-#   + "Un"<Directory_name>"Dir"
-# </constant>
+#+   "Un"<Directory_name>"Dir"
+# </constants>
 #################################################
 declare -r UnabashedDir="/home/Unabashed"
 declare -r UnLibDir="${UnabashedDir}/lib"
 
 
 #################################################
-# <variable::[GENERAL VARIABLES]>
+# <variables::Generic Variables>
 #   Unabashed variables
 # </variable>
 #################################################
 HAS_ERR=false
 WHICH_ERR=""
 UN_LIB=""
+
+
 
 
 #################################################
@@ -84,30 +92,79 @@ UN_LIB=""
 #   +  example hostname is BashServer
 # </variable>
 #################################################
-  ## FUTURE:: BUILD THIS THROUGH VARIABLES ##
-# BashServer[23:45]/home/Unabashed
-# $
-PS1='${debian_chroot:+($debian_chroot)}\h[\A]\w\n$ '
+# these are used to prefix PS1 with the exit code of the last command
+# comment them out to remove error code display
+psLastError() { printf '{ %d } ' "$?"; }
+PROMPT_COMMAND=psLastError
 
-# BashServer[23:45:55]/home/Unabashed
-# $
-#PS1='${debian_chroot:+($debian_chroot)}\h[\t]\w\n$ '
+# prefix for all PS declarations
+ps_pfx='${debian_chroot:+($debian_chroot)}'
 
-# BashServer[Sat Jan 1]/home/Unabashed
-# $
-#PS1='${debian_chroot:+($debian_chroot)}\h[\d]\w\n$ '
+# suffix for all PS declarations
+ps_sfx='\e[m\n$ '
 
-# BashServer[11:45:55]/home/Unabashed
-# $
-#PS1='${debian_chroot:+($debian_chroot)}\h[\T]\w\n$ '
+# [23:45:55]
+ps_Hms='[\t]'
 
-# BashServer[11:45 PM]/home/Unabashed
-# $
-#PS1='${debian_chroot:+($debian_chroot)}\h[\@]\w\n$ '
+# [11:45:55]
+ps_hms='[\T]'
 
-# Unabashed[23:45]/home/Unabashed
-# $
-#PS1='${debian_chroot:+($debian_chroot)}\033[00;37mUna\033[00;31mBash\033[00;37med\033[00;00m[\A]\w\n$ '
+# [Sat Jan 1]
+ps_Dmd='[\t]'
+
+# [11:45 PM]
+ps_hmP='[\@]'
+
+# [23:45]
+ps_Hm='[\A]'
+
+# Foreground color="<code>"
+#+  when using a foreground color select the light 
+#+    or dark definition and place it before the desired
+#+    PS object.
+psfg_white='\e[1m'
+psfg_black='\e[30m'
+psfg_red=';31m'
+psfg_green=';32m'
+psfg_brown=';33m'
+psfg_blue=';34m'
+psfg_purple=';35m'
+psfg_cyan=';36m'
+psfg_grey=';37m'
+
+psfg_lt_red="\e[0${psfg_red}"
+psfg_dk_red="\e[1${psfg_red}"
+psfg_lt_green="\e[0${psfg_green}"
+psfg_dk_green="\e[1${psfg_green}"
+psfg_lt_brown="\e[0${psfg_brown}"
+psfg_dk_brown="\e[0${psfg_brown}"
+psfg_lt_blue="\e[0${psfg_blue}"
+psfg_dk_blue="\e[1${psfg_blue}"
+psfg_lt_purple="\e[0${psfg_purple}"
+psfg_dk_purple="\e[1${psfg_purple}"
+psfg_lt_cyan="\e[0${psfg_cyan}"
+psfg_dk_cyan="\e[1${psfg_cyan}"
+psfg_lt_grey="\e[0${psfg_grey}"
+psfg_dk_grey="\e[1${psfg_grey}"
+
+# Background color="<code>"
+psbg_grey='\e[40m'
+psbg_red='\e[;41m'
+psbg_green='\e[;42m'
+psbg_brown='\e[;43m'
+psbg_blue='\e[;44m'
+psbg_purple='\e[;45m'
+psbg_cyan='\e[;46m'
+psbg_white='\e[;47m'
+
+# end a color assignment
+# built into $ps_sfx but needed when ending a background color
+ps_end='\e[m'
+
+# BUILD THE PROMPT
+PS1="${ps_pfx}${psfg_dk_green}\h${psfg_dk_blue}${ps_Hm} \w${ps_sfx}"
+
+
 
 
     ##########################
