@@ -118,7 +118,7 @@ calcPriority23() {
 # </function>
 ###################################
 
-makeStamp() { printf -v tm_stamp '%(%b %e %T)T; }
+makeStamp() { printf -v tm_stamp '%(%b %e %T)T'; }
 
 
 ###################################
